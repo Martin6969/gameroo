@@ -7,8 +7,8 @@
         <button 
         class="navbar-toggler" 
         type="button" 
-        data-toggle="collapse" 
-        data-target="#navbarToggler" 
+        data-bs-toggle="collapse" 
+        data-bs-target="#navbarToggler" 
         aria-controls="navbarToggler" 
         aria-expanded="false" 
         aria-label="Toggle navigation"
@@ -24,11 +24,20 @@
                <router-link to="/login" class="nav-link">Prijava</router-link> 
             </li>
             <li class="nav-item">
-               <router-link to="/home" class="nav-link">Home </router-link> 
+               <router-link to="/about" class="nav-link">About </router-link> 
             </li>
              <li class="nav-item">
               <router-link to="/signup" class="nav-link">Signup</router-link> 
              </li>
+             <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-bs-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">Dropdown</a>
+        <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
       
           </ul>
            <form class="form-inline my-2 my-lg-0">
