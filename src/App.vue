@@ -40,7 +40,7 @@
       </li>
       
           </ul>
-           <form class="form-inline my-2 my-lg-0">
+           <form class="form-inline ms-auto my-lg-2">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
           
           </form>
