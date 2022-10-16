@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav id="nav" class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav id="nav" class="navbar navbar-expand-lg navbar-light">
       <a class="navbar-brand" href="#">
          <img src="@/assets/lolo.jpg" width="50" height="50" class="d-inline-block align-mid" alt="">Gameroo
       </a>
@@ -60,10 +60,15 @@
   text-align: center;
   color: #2c3e50;
 }
-
+body{
+  background-color: #f3d7a4!important;
+}
 nav {
   padding: 30px;
-
+  background-color: #d1c756 !important;
+ .form-control{
+  background-color:#ffe3a5 !important;
+ }
   a {
     font-weight: bold;
     color: #2c3e50;

@@ -1,23 +1,31 @@
 <template>
-  <div class="jumbotron">
-  <h1 class="display-4">Hello, world!</h1>
-  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-  <hr class="my-4">
-  <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-  </p>
+ <div class="row">
+ <div class="col-6">ovo je cirkus
+  <gameroo-card />
+  <gameroo-card-2/>
+  <gameroo-card-3/>
+  <gameroo-card-4/>
 </div>
+ 
+ <div class="col-5">
+ ... ovdje ide desni stupac!
+ </div>
+ </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import GamerooCard from '@/components/GamerooCard.vue'
+import GamerooCard2 from '@/components/GamerooCard2.vue'
+import GamerooCard3 from '@/components/GamerooCard3.vue'
+import GamerooCard4 from '@/components/GamerooCard4.vue'
 export default {
-  name: 'HomeView',
+  name: 'homeview',
   components: {
-    HelloWorld
+    GamerooCard,
+    GamerooCard2,
+    GamerooCard3,
+    GamerooCard4
   }
 }
 </script>
