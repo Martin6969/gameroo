@@ -61,13 +61,13 @@
   color: #2c3e50;
 }
 body{
-  background-color: #f3d7a4!important;
+  background-color: #94a987!important;
 }
 nav {
   padding: 30px;
-  background-color: #d1c756 !important;
+  background-color: #92a188 !important;
  .form-control{
-  background-color:#ffe3a5 !important;
+  background-color:white !important;
  }
   a {
     font-weight: bold;
