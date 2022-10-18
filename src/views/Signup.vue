@@ -32,7 +32,7 @@
               id="exampleInputPassword2"
              placeholder="Password" />
     </div>
-    <button type="button" @click="signup" class="btn btn-primary">Submit</button>
+    <button type="button" @click="signup()" class="btn btn-primary">Submit</button>
     </form>
     </div>
     <div class="col-sm"></div>
