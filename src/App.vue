@@ -2,7 +2,7 @@
   <div id="app">
     <nav id="nav" class="navbar navbar-expand-lg navbar-light">
       <a class="navbar-brand" href="#">
-         <img src="@/assets/lolo.jpg" width="50" height="50" class="d-inline-block align-mid" alt="">Gameroo
+         <img src="@/assets/logo.png" width="50" height="50" class="d-inline-block align-mid" alt="">Gameroo
       </a>
         <button 
         class="navbar-toggler" 
@@ -41,7 +41,7 @@
       
           </ul>
            <form class="form-inline ms-auto my-lg-2">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <input v-model="store.searchTerm" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
           
           </form>
         </div>
@@ -51,6 +51,19 @@
       </div>
     </div>
   </template>
+
+<script>
+import store from '@/store.js';
+
+export default{
+  name: 'app',
+  data(){
+    return{
+       store,
+       }
+  }
+};
+</script>
 
 <style lang="scss">
 #app {
@@ -62,6 +75,9 @@
 }
 body{
   background-color: #94a987!important;
+}
+.btn-primary{
+  background-color: #60662d94 !important;
 }
 nav {
   padding: 30px;

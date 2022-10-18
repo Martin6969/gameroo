@@ -1,7 +1,7 @@
 <template>
   <div class="card text-center">
   <div class="card-header text-left">
-    {{ info.title }}
+    {{ info.description }}
   </div>
   <div class="card-body p-0">
     <img class="card-img-top" :src="info.url "/>
