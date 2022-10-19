@@ -20,14 +20,14 @@
             <li class="nav-item">
               <router-link to="/" class="nav-link">Home</router-link> 
             </li>
-            <li class="nav-item">
-               <router-link to="/login" class="nav-link">Prijava</router-link> 
-            </li>
-            <li class="nav-item">
-               <router-link to="/about" class="nav-link">About </router-link> 
+            <li v-if="!store.currentUser" class="nav-item">
+               <router-link to="/login" class="nav-link">Login</router-link> 
             </li>
              <li class="nav-item">
               <router-link to="/signup" class="nav-link">Signup</router-link> 
+             </li>
+             <li class="nav-item">
+              <a href="#" @click="logout()" class="nav-link">Logout</a>
              </li>
              <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-bs-toggle="dropdown"
@@ -54,14 +54,34 @@
 
 <script>
 import store from '@/store.js';
+import {firebase} from "@/firebase";
+
+firebase.auth().onAuthStateChanged((user) => {
+ if (user) {
+ // User is signed in.
+ console.log('*** User', user.email);
+ store.currentUser = user.email;
+ } else {
+ // User is not signed in.
+ console.log('*** No user');
+ store.currentUser = null;
+ }
+});
 
 export default{
   name: 'app',
-  data(){
-    return{
+  data() {
+    return {
        store,
-       }
-  }
+       };
+  },
+    methods:{
+      logout(){
+        firebase.auth().signOut().then(() => {
+          this.$router.push ({ name: "Login" });
+        });
+      },
+    },
 };
 </script>
 
