@@ -23,11 +23,11 @@
             <li v-if="!store.currentUser" class="nav-item">
                <router-link to="/login" class="nav-link">Login</router-link> 
             </li>
-             <li class="nav-item">
+             <li v-if="!store.currentUser" class="nav-item">
               <router-link to="/signup" class="nav-link">Signup</router-link> 
              </li>
-             <li class="nav-item">
-              <a href="#" @click="logout()" class="nav-link">Logout</a>
+             <li v-if="store.currentUser" class="nav-item">
+              <a href="#" @click.prevent="logout()" class="nav-link">Logout</a>
              </li>
              <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-bs-toggle="dropdown"
@@ -55,6 +55,7 @@
 <script>
 import store from '@/store.js';
 import {firebase} from "@/firebase";
+import router from "@/router";
 
 firebase.auth().onAuthStateChanged((user) => {
  if (user) {
@@ -65,6 +66,10 @@ firebase.auth().onAuthStateChanged((user) => {
  // User is not signed in.
  console.log('*** No user');
  store.currentUser = null;
+ if (router.name !=="Login"){
+ router.push({ name:"Login" })
+ }
+
  }
 });
 
