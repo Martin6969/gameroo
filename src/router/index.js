@@ -1,11 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import store from "@/store"
 
 const routes = [
   {
     path: '/',
     name: 'homeview',
-    component: HomeView
+    component: HomeView,
+    meta: {
+      needsUser: true,
+    },
   },
   {
     path: '/login',
@@ -26,6 +30,18 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+});
+router.beforeEach((to, from, next) => {
+  console.log('Bio sam na', from.name, 'idem na', to.name, 'a korisnik je', store.currentUser);
+
+  const noUser = store.currentUser === null
+
+  if (noUser && to.meta.needsUser) {
+    next("login");
+  }
+  else {
+    next();
+  }
 })
 
 export default router
