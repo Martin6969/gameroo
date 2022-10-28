@@ -7,9 +7,7 @@ const routes = [
     path: '/',
     name: 'homeview',
     component: HomeView,
-    meta: {
-      needsUser: true,
-    },
+    meta: { needsUser: true },
   },
   {
     path: '/login',
@@ -25,7 +23,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Signup.vue')
   }
 
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
@@ -37,11 +35,13 @@ router.beforeEach((to, from, next) => {
   const noUser = store.currentUser === null
 
   if (noUser && to.meta.needsUser) {
+    store.needUser = to.meta.needsUser;
     next("login");
   }
   else {
+    store.needUser = to.meta.needsUser;
     next();
   }
 })
 
-export default router
+export default router;
