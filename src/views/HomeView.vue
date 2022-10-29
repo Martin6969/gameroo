@@ -1,6 +1,31 @@
 <template>
  <div class="row">
  <div class="col-6">ovo je Prvi stupac
+  <!-- nova forma za post -->
+ <form @submit.prevent="postNewImage" class="form-inline mb-5">
+ <div class="form-group">
+ <label for="imageUrl">Image URL</label>
+ <input
+ v-model="newImageUrl"
+type="text"
+class="form-control ml-2"
+placeholder="Enter the image URL"
+id="imageUrl"
+ />
+ </div>
+ <div class="form-group">
+ <label for="imageDescription">Description</label>
+ <input
+ v-model="newImageDescription"
+type="text"
+class="form-control ml-2"
+placeholder="Enter the image description"
+id="imageDescription"
+ />
+ </div>
+ <button type="submit" class="btn btn-primary ml-2">Post
+image</button>
+ </form>
   <gameroo-card v-for="card in filteredCards" :key="card.url" :info="card" />
  
 </div>
@@ -15,6 +40,8 @@
 // @ is an alias to /src
 import GamerooCard from '@/components/GamerooCard.vue'
 import store from '@/store.js'
+import { db } from "@/firebase.js";
+import { throwStatement } from '@babel/types';
 let cards = [];
 
 cards = [
@@ -30,7 +57,31 @@ export default {
     return {
       cards,
       store,
+      newImageUrl:"",
+      newImageDescription: "",
   };
+},
+methods: {
+postNewImage() {
+  const imageUrl=this.newImageUrl;
+  const imageDescription=this.newImageDescription;
+  db.collection("posts").add({
+    url:imageUrl,
+    description:imageDescription,
+    email:store.currentUser,
+    posted_at:Date.now(),
+  })
+  .then((doc)=>{
+console.log("spremljeno",doc);
+this.newImageDescription="";
+this.newImageUrl="";
+  })
+  .catch((e)=>{
+console.error(e);
+  });
+
+  console.log("oki");
+},
 },
 computed: {
     filteredCards() {
