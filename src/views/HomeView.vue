@@ -26,7 +26,7 @@ id="imageDescription"
  <button type="submit" class="btn btn-primary ml-2">Post
 image</button>
  </form>
-  <gameroo-card v-for="card in filteredCards" :key="card.url" :info="card" />
+  <gameroo-card v-for="card in filteredCards" :key="card.id" :info="card" />
  
 </div>
  
@@ -42,26 +42,50 @@ import GamerooCard from '@/components/GamerooCard.vue'
 import store from '@/store.js'
 import { db } from "@/firebase.js";
 import { throwStatement } from '@babel/types';
-let cards = [];
+//let cards = [];
 
-cards = [
+/*cards = [
   {url:"https://image.api.playstation.com/vulcan/ap/rnd/202102/2307/kQzDCY5RCrSXCeeFjPGUzkGI.png","description": "Kena: Bridge of spirits","time": "10 minutes ago.."},
  { url:"https://image.api.playstation.com/cdn/EP0700/CUSA03365_00/OFMeAw2KhrdaEZAjW1f3tCIXbogkLpTC.png","description": "Dark souls 3","time": "20 minutes ago.."},
  { url:"https://cdn1.epicgames.com/undefined/offer/S2_ACOD-1280x1440-621a727d381ffe0cffe869c1e23bc741.jpg","description": "AC Odyssey","time": "30 minutes ago.."},
  { url:"https://cdn.wccftech.com/wp-content/uploads/2020/06/Assassins-Creed-Valhalla-Game-Bundle-Promo.jpg","description": "AC Valhalla","time": "40 minutes ago.."},
  ];
-
+*/
 export default {
   name: 'homeview',
   data: function() {
     return {
-      cards,
+      cards : [],
       store,
       newImageUrl:"",
       newImageDescription: "",
   };
 },
+mounted(){
+  this.getPosts();
+},
 methods: {
+getPosts(){
+console.log("firebase dohvat");
+
+db.collection("posts")
+.orderBy("posted_at","desc")
+.limit(100)
+.get()
+.then((query)=>{
+  this.cards = [];
+  query.forEach((doc)=>{
+    const data = doc.data();
+
+    this.cards.push({
+      id: doc.id,
+      time: data.posted_at,
+      description: data.description,
+      url: data.url,
+    })
+  });
+});
+},
 postNewImage() {
   const imageUrl=this.newImageUrl;
   const imageDescription=this.newImageDescription;
@@ -75,6 +99,7 @@ postNewImage() {
 console.log("spremljeno",doc);
 this.newImageDescription="";
 this.newImageUrl="";
+this.getPosts();
   })
   .catch((e)=>{
 console.error(e);
