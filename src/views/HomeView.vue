@@ -5,13 +5,13 @@
  <form @submit.prevent="postNewImage" class="form-inline mb-5">
  <div class="form-group">
  <label for="imageUrl">Image URL</label>
- <input
+ <!--<input
  v-model="newImageUrl"
 type="text"
 class="form-control ml-2"
 placeholder="Enter the image URL"
 id="imageUrl"
- />
+ />-->
  </div>
  <div class="form-group">
  <label for="imageDescription">Description</label>
@@ -22,12 +22,15 @@ class="form-control ml-2"
 placeholder="Enter the image description"
 id="imageDescription"
  />
+ <!--<a style="margin-bottom:50px; margin-top:10px" class="btn btn-primary ml-2" @click="toggleShow">Upload picture</a>-->
+      <label for="formFile" class="form-label">Upload Image:</label>
+      <div style="width:400px;height:400px;background-color:blue;"><croppa style="background-color:blue" :width="400" :height="400" placeholder="Upload image" v-model="imageUpload" ></croppa></div>
  </div>
  <button type="submit" class="btn btn-primary ml-2">Post
 image</button>
  </form>
   <gameroo-card v-for="card in filteredCards" :key="card.id" :info="card" />
- 
+
 </div>
  
  <div class="col-5">
@@ -40,8 +43,11 @@ image</button>
 // @ is an alias to /src
 import GamerooCard from '@/components/GamerooCard.vue'
 import store from '@/store.js'
-import { db } from "@/firebase.js";
+import { db, storage } from "@/firebase.js";
+import firebase from "firebase";
 import { throwStatement } from '@babel/types';
+
+
 //let cards = [];
 
 /*cards = [
@@ -51,7 +57,9 @@ import { throwStatement } from '@babel/types';
  { url:"https://cdn.wccftech.com/wp-content/uploads/2020/06/Assassins-Creed-Valhalla-Game-Bundle-Promo.jpg","description": "AC Valhalla","time": "40 minutes ago.."},
  ];
 */
+
 export default {
+  
   name: 'homeview',
   data: function() {
     return {
@@ -59,15 +67,17 @@ export default {
       store,
       newImageUrl:"",
       newImageDescription: "",
+      imageUpload:null,
+      url: ""
   };
 },
 mounted(){
   this.getPosts();
 },
 methods: {
+
 getPosts(){
 console.log("firebase dohvat");
-
 db.collection("posts")
 .orderBy("posted_at","desc")
 .limit(100)
@@ -86,26 +96,51 @@ db.collection("posts")
   });
 });
 },
+
 postNewImage() {
   const imageUrl=this.newImageUrl;
   const imageDescription=this.newImageDescription;
-  db.collection("posts").add({
-    url:imageUrl,
-    description:imageDescription,
-    email:store.currentUser,
-    posted_at:Date.now(),
-  })
-  .then((doc)=>{
-console.log("spremljeno",doc);
-this.newImageDescription="";
-this.newImageUrl="";
-this.getPosts();
-  })
-  .catch((e)=>{
-console.error(e);
-  });
+          
+this.imageUpload.generateBlob((blobData) => {
+        console.log(blobData);
+        let imageName =
+          "/" + store.currentUser + "/" + Date.now() + ".png";
+        const url = this.url;
 
-  console.log("oki");
+        storage
+          .ref(imageName)
+          .put(blobData)
+          .then((result) => {
+            result.ref
+              .getDownloadURL()
+              .then((url) => {
+                console.log("Evo linka: ", url);
+              
+          db.collection("posts").add({
+              //url:imageUrl,
+              description:imageDescription,
+              //image:this.imageUpload,
+              url: url,
+              email:store.currentUser,
+              posted_at:Date.now(),
+            })
+            .then((doc)=>{
+              console.log("spremljeno",doc);
+              this.newImageDescription="";
+              this.newImageUrl="";
+              this.imageUpload=null,
+              this.getPosts();
+            })
+            .catch((e)=>{
+          console.error(e);
+          });
+          });
+          });
+          });
+
+            console.log("oki");
+
+
 },
 },
 computed: {
@@ -115,11 +150,13 @@ computed: {
     },
   },
   components:{
-  GamerooCard,
+    GamerooCard,
   },
 };
 </script>
 
 <style scoped>
-
+.bg{
+  background-color:white;
+}
 </style>

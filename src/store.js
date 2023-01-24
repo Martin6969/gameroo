@@ -1,9 +1,5 @@
-import { reactive } from 'vue'
-
-const store = reactive({
+export default {
     searchTerm: '',
     currentUser: null,
     needUser: null,
-})
-
-export default store;
+}
