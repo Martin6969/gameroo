@@ -24,7 +24,7 @@ id="imageDescription"
  />
  <!--<a style="margin-bottom:50px; margin-top:10px" class="btn btn-primary ml-2" @click="toggleShow">Upload picture</a>-->
       <label for="formFile" class="form-label">Upload Image:</label>
-      <div style="width:400px;height:400px;background-color:blue;"><croppa style="background-color:blue" :width="400" :height="400" placeholder="Upload image" v-model="imageUpload" ></croppa></div>
+      <div style="width:400px;height:400px;background-color:blue;"><croppa style="background-color:#92a188" :width="400" :height="400" placeholder="Upload image" v-model="imageUpload" ></croppa></div>
  </div>
  <button type="submit" class="btn btn-primary ml-2">Post
 image</button>
@@ -96,45 +96,51 @@ db.collection("posts")
   });
 });
 },
+getImage(){
+
+  return new Promise((resolveFn,errorFn)=>{
+    this.imageUpload.generateBlob((data)=>{
+      resolveFn(data);
+    });
+
+  });
+},
 
 postNewImage() {
   const imageUrl=this.newImageUrl;
   const imageDescription=this.newImageDescription;
-          
-this.imageUpload.generateBlob((blobData) => {
-        console.log(blobData);
+  
+//this.imageUpload.generateBlob((blobData) => {
+        this.getImage().then((data)=>{
+        console.log(data);
         let imageName =
           "/" + store.currentUser + "/" + Date.now() + ".png";
         const url = this.url;
 
-        storage
-          .ref(imageName)
-          .put(blobData)
-          .then((result) => {
-            result.ref
-              .getDownloadURL()
-              .then((url) => {
-                console.log("Evo linka: ", url);
+        return storage.ref(imageName).put(data)
+        })
+        .then((result) => {
+            return result.ref.getDownloadURL()
+        })
+        .then((url) => {
+            console.log("Evo linka: ", url);
               
-          db.collection("posts").add({
-              //url:imageUrl,
+          return db.collection("posts").add({
               description:imageDescription,
-              //image:this.imageUpload,
               url: url,
               email:store.currentUser,
               posted_at:Date.now(),
             })
+            
             .then((doc)=>{
               console.log("spremljeno",doc);
               this.newImageDescription="";
               this.newImageUrl="";
-              this.imageUpload=null,
+              this.imageUpload.remove();
               this.getPosts();
             })
             .catch((e)=>{
           console.error(e);
-          });
-          });
           });
           });
 

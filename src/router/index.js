@@ -37,12 +37,14 @@ router.beforeEach((to, from, next) => {
 
   const noUser = store.currentUser === null
 
+
+
+
   if (noUser && to.meta.needsUser) {
-    store.needUser = to.meta.needsUser;
     next("login");
   }
+
   else {
-    store.needUser = to.meta.needsUser;
     next();
   }
 })
