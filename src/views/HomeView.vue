@@ -2,7 +2,8 @@
  <div class="row">
  <div class="col-6">ovo je Prvi stupac
   <!-- nova forma za post -->
- <form @submit.prevent="postNewImage" class="form-inline mb-5">
+<img v-if="loading" class="loading" :src="require('@/assets/loadingg.gif')"/>
+ <form v-if="!loading"  @submit.prevent="postNewImage" class="form-inline mb-5">
  <div class="form-group">
  <label for="imageUrl">Image URL</label>
  <!--<input
@@ -20,8 +21,7 @@ id="imageUrl"
 type="text"
 class="form-control ml-2"
 placeholder="Enter the image description"
-id="imageDescription"
- />
+id="imageDescription"/>
  <!--<a style="margin-bottom:50px; margin-top:10px" class="btn btn-primary ml-2" @click="toggleShow">Upload picture</a>-->
       <label for="formFile" class="form-label">Upload Image:</label>
       <div style="width:400px;height:400px;background-color:blue;"><croppa style="background-color:#92a188" :width="400" :height="400" placeholder="Upload image" v-model="imageUpload" ></croppa></div>
@@ -63,6 +63,7 @@ export default {
   name: 'homeview',
   data: function() {
     return {
+      loading:false,
       cards : [],
       store,
       newImageUrl:"",
@@ -106,46 +107,38 @@ getImage(){
   });
 },
 
-postNewImage() {
+async postNewImage() {
   const imageUrl=this.newImageUrl;
   const imageDescription=this.newImageDescription;
   
 //this.imageUpload.generateBlob((blobData) => {
-        this.getImage().then((data)=>{
-        console.log(data);
-        let imageName =
-          "/" + store.currentUser + "/" + Date.now() + ".png";
-        const url = this.url;
-
-        return storage.ref(imageName).put(data)
-        })
-        .then((result) => {
-            return result.ref.getDownloadURL()
-        })
-        .then((url) => {
-            console.log("Evo linka: ", url);
+  try{
+        this.loading = true;
+        let blobdata = await this.getImage()
+        let imageName ="/" + store.currentUser + "/" + Date.now() + ".png";
+        let result = await storage.ref(imageName).put(blobdata);
+        let url = await result.ref.getDownloadURL();
+           
+        console.log("Evo linka: ", url);
               
-          return db.collection("posts").add({
+        let doc = await  db.collection("posts").add({
               description:imageDescription,
               url: url,
               email:store.currentUser,
               posted_at:Date.now(),
-            })
+            });
             
-            .then((doc)=>{
               console.log("spremljeno",doc);
               this.newImageDescription="";
               this.newImageUrl="";
-              this.imageUpload.remove();
               this.getPosts();
-            })
-            .catch((e)=>{
-          console.error(e);
-          });
-          });
-
+  
             console.log("oki");
-
+          }
+          catch(e){
+            console.error("greška", e);
+          }
+          this.loading = false;
 
 },
 },
@@ -162,6 +155,9 @@ computed: {
 </script>
 
 <style scoped>
+.loading{
+  width:545px;
+}
 .bg{
   background-color:white;
 }
