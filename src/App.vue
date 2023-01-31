@@ -66,6 +66,7 @@ firebase.auth().onAuthStateChanged((user) => {
  // User is signed in.
  console.log('*** User', user.email);
  store.currentUser = user.email;
+ router.push({name:"homeview"})
 
  db.collection("korisnici")
  .doc(user.email)
