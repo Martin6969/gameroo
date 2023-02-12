@@ -9,7 +9,27 @@ const routes = [
     path: '/',
     name: 'homeview',
     component: HomeView,
-    meta: { needsUser: true },
+    children: [
+      {
+        path: '',
+        name: 'posts',
+        component: () => import(/* webpackChunkName: "post" */
+          '../views/Posts.vue')
+      },
+      {
+        path: 'newpost',
+        name: 'newpost',
+        component: () => import(/* webpackChunkName: "post" */
+          '../views/NewPost.vue')
+      },
+      {
+        path: 'post/:id',
+        props: true, // važno da nam se puni "id" kao parametar komponente"PostDetail.vue"
+        name: 'post-detail',
+        component: () => import(/* webpackChunkName: "post-detail" */
+          '../views/PostDetail.vue')
+      }
+    ]
   },
   {
     path: '/login',
